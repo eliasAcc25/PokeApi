@@ -70,6 +70,3 @@ Uma coleção do Postman está disponível no arquivo `PokeFight_Postman_Collect
 - GET `/api/battles` - Lista todas as batalhas
 - GET `/api/battles/{id}` - Obtém detalhes de uma batalha específica
 
-## 👥 Autor
-
-- Elias Torres
