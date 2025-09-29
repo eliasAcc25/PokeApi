@@ -1,0 +1,225 @@
+{
+	"info": {
+		"name": "PokéFight API - Batalhas Pokémon",
+		"description": "Collection completa para testar a API de batalhas Pokémon",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "🥊 BATALHAS",
+			"item": [
+				{
+					"name": "1. Criar Batalha - Pikachu vs Charmander",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"pokemon1Id\": 25,\n  \"pokemon2Id\": 4\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/batalhas",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "batalhas"]
+						},
+						"description": "Cria uma batalha entre Pikachu (ID: 25) e Charmander (ID: 4)"
+					}
+				},
+				{
+					"name": "2. Criar Batalha - Bulbasaur vs Squirtle",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"pokemon1Id\": 1,\n  \"pokemon2Id\": 7\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/batalhas",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "batalhas"]
+						},
+						"description": "Batalha clássica entre os starters Bulbasaur vs Squirtle"
+					}
+				},
+				{
+					"name": "3. Criar Batalha - Mewtwo vs Mew (Legendários)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"pokemon1Id\": 150,\n  \"pokemon2Id\": 151\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/batalhas",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "batalhas"]
+						},
+						"description": "Batalha épica entre os Pokémons lendários Mewtwo vs Mew"
+					}
+				},
+				{
+					"name": "4. Ver Resultado de uma Batalha",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "http://localhost:8080/api/batalhas/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "batalhas", "1"]
+						},
+						"description": "Consulta o resultado da batalha com ID 1 (mude o número conforme necessário)"
+					}
+				},
+				{
+					"name": "5. Listar Todas as Batalhas",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "http://localhost:8080/api/batalhas",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "batalhas"]
+						},
+						"description": "Lista todas as batalhas já realizadas (histórico completo)"
+					}
+				}
+			],
+			"description": "Endpoints principais para criar e consultar batalhas"
+		},
+		{
+			"name": "🔍 POKÉMONS",
+			"item": [
+				{
+					"name": "6. Listar Pokémons Salvos",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "http://localhost:8080/api/pokemon",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "pokemon"]
+						},
+						"description": "Lista todos os Pokémons que já foram salvos no banco de dados"
+					}
+				},
+				{
+					"name": "7. Buscar Pokémon por Nome",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "http://localhost:8080/api/pokemon/search/pikachu",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "pokemon", "search", "pikachu"]
+						},
+						"description": "Busca um Pokémon específico por nome (mude 'pikachu' pelo nome desejado)"
+					}
+				},
+				{
+					"name": "8. Buscar Pokémon por ID Local",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "http://localhost:8080/api/pokemon/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "pokemon", "1"]
+						},
+						"description": "Busca um Pokémon pelo ID local do banco de dados"
+					}
+				}
+			],
+			"description": "Endpoints para consultar informações dos Pokémons"
+		},
+		{
+			"name": "🧪 TESTES DIVERSOS",
+			"item": [
+				{
+					"name": "9. Batalha Personalizada - Seu Teste",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"pokemon1Id\": 6,\n  \"pokemon2Id\": 9\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/batalhas",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "batalhas"]
+						},
+						"description": "Batalha customizável - Charizard vs Blastoise (mude os IDs como quiser!)"
+					}
+				},
+				{
+					"name": "10. Teste de Erro - Mesmo Pokémon",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"pokemon1Id\": 25,\n  \"pokemon2Id\": 25\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/batalhas",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "batalhas"]
+						},
+						"description": "Teste de validação - deve retornar erro pois é o mesmo Pokémon"
+					}
+				}
+			],
+			"description": "Testes adicionais e casos de erro"
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080",
+			"description": "URL base da API PokéFight"
+		}
+	]
+}
+

@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 PokéFight - Batalhas Pokémon</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .battle-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .battle-form {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 20px;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .pokemon-selector {
+            text-align: center;
+        }
+
+        .pokemon-selector h3 {
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .pokemon-input {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .pokemon-name {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #ffeb3b;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            min-height: 25px;
+        }
+
+        .vs-divider {
+            font-size: 3rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            color: #ff5722;
+        }
+
+        .battle-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            color: white;
+            font-size: 1.3rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            margin: 20px auto;
+            display: block;
+        }
+
+        .battle-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+        }
+
+        .battle-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .result-section {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .result-section.show {
+            display: block;
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .winner-announcement {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #4caf50;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .battle-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .pokemon-result {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .pokemon-result.winner {
+            background: rgba(76, 175, 80, 0.3);
+            border: 2px solid #4caf50;
+        }
+
+        .pokemon-result h4 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            text-transform: capitalize;
+        }
+
+        .experience {
+            font-size: 1.2rem;
+            color: #ffeb3b;
+            margin: 5px 0;
+        }
+
+        .popular-pokemon {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .popular-pokemon h3 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .pokemon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .pokemon-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .pokemon-card:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .pokemon-card.selected {
+            border-color: #ffeb3b;
+            background: rgba(255, 235, 59, 0.2);
+        }
+
+        .pokemon-card h4 {
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+
+        .pokemon-card .id {
+            color: #bbb;
+            font-size: 0.9rem;
+        }
+
+        .history-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+        }
+
+        .history-section h3 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .battle-history {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .history-battle {
+            flex: 1;
+        }
+
+        .history-winner {
+            color: #4caf50;
+            font-weight: bold;
+        }
+
+        .loading {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #ffeb3b;
+        }
+
+        .error {
+            background: rgba(244, 67, 54, 0.2);
+            border: 1px solid #f44336;
+            color: #ffcdd2;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .battle-form {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .vs-divider {
+                font-size: 2rem;
+            }
+
+            .battle-details {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎮 PokéFight</h1>
+            <p>Batalhas épicas entre Pokémons!</p>
+        </div>
+
+        <div class="battle-section">
+            <div class="battle-form">
+                <div class="pokemon-selector">
+                    <h3>🔥 Pokémon 1</h3>
+                    <input type="number" id="pokemon1Id" class="pokemon-input" placeholder="Digite o ID (ex: 25)" min="1" max="1010">
+                    <div id="pokemon1Name" class="pokemon-name"></div>
+                </div>
+
+                <div class="vs-divider">VS</div>
+
+                <div class="pokemon-selector">
+                    <h3>⚡ Pokémon 2</h3>
+                    <input type="number" id="pokemon2Id" class="pokemon-input" placeholder="Digite o ID (ex: 4)" min="1" max="1010">
+                    <div id="pokemon2Name" class="pokemon-name"></div>
+                </div>
+            </div>
+
+            <button id="battleBtn" class="battle-btn">⚔️ INICIAR BATALHA</button>
+
+            <div id="resultSection" class="result-section">
+                <div id="winnerAnnouncement" class="winner-announcement"></div>
+                <div class="battle-details">
+                    <div id="pokemon1Result" class="pokemon-result">
+                        <h4 id="pokemon1ResultName"></h4>
+                        <div id="pokemon1Experience" class="experience"></div>
+                    </div>
+                    <div id="pokemon2Result" class="pokemon-result">
+                        <h4 id="pokemon2ResultName"></h4>
+                        <div id="pokemon2Experience" class="experience"></div>
+                    </div>
+                </div>
+                <div id="battleDate" style="text-align: center; color: #bbb;"></div>
+            </div>
+
+            <div id="loadingMessage" class="loading" style="display: none;">
+                🔄 Preparando a batalha... Isso pode levar alguns segundos na primeira vez!
+            </div>
+
+            <div id="errorMessage" class="error" style="display: none;"></div>
+        </div>
+
+        <div class="popular-pokemon">
+            <h3>🌟 Pokémons Populares</h3>
+            <div class="pokemon-grid">
+                <div class="pokemon-card" data-id="25" data-name="pikachu">
+                    <h4>Pikachu</h4>
+                    <div class="id">ID: 25</div>
+                </div>
+                <div class="pokemon-card" data-id="1" data-name="bulbasaur">
+                    <h4>Bulbasaur</h4>
+                    <div class="id">ID: 1</div>
+                </div>
+                <div class="pokemon-card" data-id="4" data-name="charmander">
+                    <h4>Charmander</h4>
+                    <div class="id">ID: 4</div>
+                </div>
+                <div class="pokemon-card" data-id="7" data-name="squirtle">
+                    <h4>Squirtle</h4>
+                    <div class="id">ID: 7</div>
+                </div>
+                <div class="pokemon-card" data-id="6" data-name="charizard">
+                    <h4>Charizard</h4>
+                    <div class="id">ID: 6</div>
+                </div>
+                <div class="pokemon-card" data-id="9" data-name="blastoise">
+                    <h4>Blastoise</h4>
+                    <div class="id">ID: 9</div>
+                </div>
+                <div class="pokemon-card" data-id="150" data-name="mewtwo">
+                    <h4>Mewtwo</h4>
+                    <div class="id">ID: 150</div>
+                </div>
+                <div class="pokemon-card" data-id="151" data-name="mew">
+                    <h4>Mew</h4>
+                    <div class="id">ID: 151</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="history-section">
+            <h3>📋 Histórico de Batalhas</h3>
+            <div id="battleHistory" class="battle-history">
+                <div class="loading">Carregando histórico...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '/api';
+        let selectedPokemon = null;
+
+        // Elementos do DOM
+        const pokemon1Input = document.getElementById('pokemon1Id');
+        const pokemon2Input = document.getElementById('pokemon2Id');
+        const pokemon1Name = document.getElementById('pokemon1Name');
+        const pokemon2Name = document.getElementById('pokemon2Name');
+        const battleBtn = document.getElementById('battleBtn');
+        const resultSection = document.getElementById('resultSection');
+        const loadingMessage = document.getElementById('loadingMessage');
+        const errorMessage = document.getElementById('errorMessage');
+        const battleHistory = document.getElementById('battleHistory');
+
+        // Cache de nomes de Pokémon
+        const pokemonCache = {};
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            loadBattleHistory();
+            setupEventListeners();
+            loadPokemons();
+        });
+
+        function setupEventListeners() {
+            // Inputs de ID dos Pokémon
+            pokemon1Input.addEventListener('input', () => fetchPokemonName(pokemon1Input.value, pokemon1Name));
+            pokemon2Input.addEventListener('input', () => fetchPokemonName(pokemon2Input.value, pokemon2Name));
+
+            // Botão de batalha
+            battleBtn.addEventListener('click', startBattle);
+
+            // Cards de Pokémon populares
+            document.querySelectorAll('.pokemon-card').forEach(card => {
+                card.addEventListener('click', () => selectPokemon(card));
+            });
+        }
+
+        function selectPokemon(card) {
+            const id = card.dataset.id;
+            const name = card.dataset.name;
+
+            // Remove seleção anterior
+            document.querySelectorAll('.pokemon-card').forEach(c => c.classList.remove('selected'));
+
+            if (!selectedPokemon) {
+                // Seleciona Pokémon 1
+                pokemon1Input.value = id;
+                pokemon1Name.textContent = name.charAt(0).toUpperCase() + name.slice(1);
+                card.classList.add('selected');
+                selectedPokemon = 1;
+            } else if (selectedPokemon === 1) {
+                // Seleciona Pokémon 2
+                pokemon2Input.value = id;
+                pokemon2Name.textContent = name.charAt(0).toUpperCase() + name.slice(1);
+                card.classList.add('selected');
+                selectedPokemon = null; // Reset para permitir nova seleção
+            }
+        }
+
+        async function fetchPokemonName(id, nameElement) {
+            if (!id || id < 1 || id > 1010) {
+                nameElement.textContent = '';
+                return;
+            }
+
+            if (pokemonCache[id]) {
+                nameElement.textContent = pokemonCache[id];
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/pokemon/${id}`);
+                if (response.ok) {
+                    const pokemon = await response.json();
+                    const name = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
+                    pokemonCache[id] = name;
+                    nameElement.textContent = name;
+                } else {
+                    nameElement.textContent = '';
+                }
+            } catch (error) {
+                nameElement.textContent = '';
+            }
+        }
+
+        async function startBattle() {
+            const pokemon1Id = parseInt(pokemon1Input.value);
+            const pokemon2Id = parseInt(pokemon2Input.value);
+
+            // Validações
+            if (!pokemon1Id || !pokemon2Id) {
+                showError('Por favor, digite os IDs dos dois Pokémons!');
+                return;
+            }
+
+            if (pokemon1Id === pokemon2Id) {
+                showError('Um Pokémon não pode batalhar contra si mesmo!');
+                return;
+            }
+
+            if (pokemon1Id < 1 || pokemon1Id > 1010 || pokemon2Id < 1 || pokemon2Id > 1010) {
+                showError('IDs devem estar entre 1 e 1010!');
+                return;
+            }
+
+            // Mostra loading
+            battleBtn.disabled = true;
+            loadingMessage.style.display = 'block';
+            hideError();
+            resultSection.classList.remove('show');
+
+            try {
+                const response = await fetch(`${API_BASE}/batalhas`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        pokemon1Id: pokemon1Id,
+                        pokemon2Id: pokemon2Id
+                    })
+                });
+
+                if (response.ok) {
+                    const battle = await response.json();
+                    displayBattleResult(battle);
+                    loadBattleHistory(); // Atualiza o histórico
+                } else {
+                    showError('Erro ao criar batalha. Verifique os IDs dos Pokémons.');
+                }
+            } catch (error) {
+                showError('Erro de conexão. Verifique se o servidor está rodando.');
+            } finally {
+                battleBtn.disabled = false;
+                loadingMessage.style.display = 'none';
+            }
+        }
+
+        function displayBattleResult(battle) {
+            const winnerAnnouncement = document.getElementById('winnerAnnouncement');
+            const pokemon1Result = document.getElementById('pokemon1Result');
+            const pokemon2Result = document.getElementById('pokemon2Result');
+            const pokemon1ResultName = document.getElementById('pokemon1ResultName');
+            const pokemon2ResultName = document.getElementById('pokemon2ResultName');
+            const pokemon1Experience = document.getElementById('pokemon1Experience');
+            const pokemon2Experience = document.getElementById('pokemon2Experience');
+            const battleDate = document.getElementById('battleDate');
+
+            // Determina o vencedor
+            const winner = battle.winner.name;
+            winnerAnnouncement.textContent = `🏆 ${winner.charAt(0).toUpperCase() + winner.slice(1)} VENCEU!`;
+
+            // Preenche dados dos Pokémon
+            pokemon1ResultName.textContent = battle.pokemon1.name.charAt(0).toUpperCase() + battle.pokemon1.name.slice(1);
+            pokemon2ResultName.textContent = battle.pokemon2.name.charAt(0).toUpperCase() + battle.pokemon2.name.slice(1);
+            pokemon1Experience.textContent = `⭐ ${battle.pokemon1.baseExperience} XP`;
+            pokemon2Experience.textContent = `⭐ ${battle.pokemon2.baseExperience} XP`;
+
+            // Destaca o vencedor
+            pokemon1Result.classList.toggle('winner', battle.pokemon1.name === winner);
+            pokemon2Result.classList.toggle('winner', battle.pokemon2.name === winner);
+
+            // Data da batalha
+            battleDate.textContent = `Batalha realizada em: ${battle.battleDate}`;
+
+            // Mostra resultado
+            resultSection.classList.add('show');
+        }
+
+        async function loadBattleHistory() {
+            try {
+                const response = await fetch(`${API_BASE}/batalhas`);
+                if (response.ok) {
+                    const battles = await response.json();
+                    displayBattleHistory(battles);
+                } else {
+                    battleHistory.innerHTML = '<div class="error">Erro ao carregar histórico</div>';
+                }
+            } catch (error) {
+                battleHistory.innerHTML = '<div class="error">Erro de conexão</div>';
+            }
+        }
+
+        function displayBattleHistory(battles) {
+            if (battles.length === 0) {
+                battleHistory.innerHTML = '<div class="loading">Nenhuma batalha ainda. Que tal começar uma?</div>';
+                return;
+            }
+
+            battleHistory.innerHTML = battles
+                .slice(-10) // Mostra apenas as 10 mais recentes
+                .reverse()
+                .map(battle => `
+                    <div class="history-item">
+                        <div class="history-battle">
+                            <strong>${battle.pokemon1.name.charAt(0).toUpperCase() + battle.pokemon1.name.slice(1)}</strong>
+                            <span style="color: #ff5722;"> VS </span>
+                            <strong>${battle.pokemon2.name.charAt(0).toUpperCase() + battle.pokemon2.name.slice(1)}</strong>
+                        </div>
+                        <div class="history-winner">
+                            🏆 ${battle.winner.name.charAt(0).toUpperCase() + battle.winner.name.slice(1)}
+                        </div>
+                    </div>
+                `).join('');
+        }
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+        }
+
+        function hideError() {
+            errorMessage.style.display = 'none';
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const pokemonSelector = document.querySelector(".pokemon-selector");
+
+            // Função para carregar os Pokémon
+            async function loadPokemons() {
+                try {
+                    const response = await fetch("/api/pokemon");
+                    if (!response.ok) {
+                        throw new Error("Erro ao carregar os Pokémon");
+                    }
+                    const pokemons = await response.json();
+
+                    // Renderizar as opções
+                    pokemons.forEach(pokemon => {
+                        const option = document.createElement("div");
+                        option.className = "pokemon-name";
+                        option.textContent = pokemon.name;
+                        pokemonSelector.appendChild(option);
+                    });
+                } catch (error) {
+                    console.error("Erro ao carregar os Pokémon:", error);
+                }
+            }
+
+            loadPokemons();
+        });
+    </script>
+</body>
+</html>
