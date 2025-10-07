@@ -85,9 +85,6 @@ graph TB
     class BDTO,PDTO,BE,PE dto
 ```
 
-**📋 Arquivo Draw.io disponível:**
-- 📁 Para edição: `docs/arquitetura-sistema-atualizada.drawio` - abra em [app.diagrams.net](https://app.diagrams.net)
-
 ### Descrição da Arquitetura
 
 #### 🎯 **Camada de Apresentação**
